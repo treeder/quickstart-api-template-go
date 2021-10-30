@@ -27,7 +27,7 @@
 			"**/target/**": true
 		}
 	},
-	"remoteUser": "codespace",
+ 	//	"remoteUser": "codespace",
 	"overrideCommand": false,
 	"mounts": [
 		"source=codespaces-linux-var-lib-docker,target=/var/lib/docker,type=volume"
