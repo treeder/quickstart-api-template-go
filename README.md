@@ -2,7 +2,7 @@
 
 just testing rapid app creation
 
-frontend: https://github.com/treeder/temp-ui
+[frontend template](https://github.com/treeder/flap-ui-template)
 
 * Update go mod, change module name at top to new repo github.com/treeder/xxx
 * Create firebase project
