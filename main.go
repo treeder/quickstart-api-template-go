@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 
+	"github.com/joho/godotenv"
 	"github.com/dgraph-io/ristretto"
 	"github.com/treeder/firetils"
 	"github.com/treeder/gcputils"
@@ -14,6 +15,12 @@ import (
 
 func main() {
 	ctx := context.Background()
+	
+	err := godotenv.Load()
+	if err != nil {
+		gotils.L(ctx).Info().Println("Warning: error loading .env file:", err)
+	}
+
 
 	// GOOGLE CREDS
 	opts, projectID, err := gcputils.CredentialsAndProjectIDFromEnv("G_KEY", "G_PROJECT_ID")
