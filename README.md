@@ -16,3 +16,10 @@ For rapid app creation.
     * Make `.env` file with `G_KEY` (output of above command) and `G_PROJECT_ID`
         * Or add those vars into your codespace secrets
 * `make run` (boom)
+
+## Auto Deploying
+
+* Go to https://console.cloud.google.com/ , choose your firebase project
+* Go to Cloud run -> create service
+* Mostly defaults, but choose deploy from github and choose your repo
+* No Google env vars required, but add any new ones you created
