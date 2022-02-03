@@ -29,25 +29,20 @@ func main() {
 	}
 
 	// GET OTHER ENV VARS HERE
-	cmcKey := gcputils.GetEnvVar("CMC_KEY", "")
-	if cmcKey == "" {
-		gotils.L(ctx).Error().Print("CMC_KEY not set")
-	}
-
 	env := gcputils.GetEnvVar("ENV", "dev")
 	if env == "prod" {
 		gotils.SetLoggable(gcputils.NewLogger())
 	}
 
 	cache, err := ristretto.NewCache(&ristretto.Config{
-		NumCounters: 10000 * 10,
-		MaxCost:     10000,
+		NumCounters: 10000000,
+		MaxCost:     100000000,
 		BufferItems: 64,
 	})
 	if err != nil {
 		log.Fatalln("error creating cache", err)
 	}
-	globals.Cache = cache
+	globals.App.Cache = cache
 
 	firebaseApp, err := firetils.New(ctx, projectID, opts)
 	if err != nil {
@@ -58,7 +53,7 @@ func main() {
 	if err != nil {
 		gotils.Logf(ctx, "error", "couldn't init firestore: %v\n", err)
 	}
-	globals.Fs = firestore
+	globals.App.Db = firestore
 	// if you want auth:
 	// fireauth, err := firebaseApp.Auth(ctx)
 	// if err != nil {

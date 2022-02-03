@@ -1,15 +1,18 @@
-# FLAP API Template
+# Quickstart API Template
 
-just testing rapid app creation
+For rapid app creation.
 
-[frontend template](https://github.com/treeder/flap-ui-template)
+[Frontend template](https://github.com/treeder/flap-ui-template)
 
-* Update go mod, change module name at top to new repo github.com/treeder/xxx
-* Create firebase project
-* Upgrade to pay as you go
-* Create firestore
-* Go to settings -> Service accounts, click "Generate new private key". This will download a JSON file. 
-* Run `base64 -w 0 account.json` to get encoded version of the file (for secrets)
-* Make `.env` file with G_KEY and G_PROJECT_ID
-    * And or add this into your repos codespace secrets as G_KEY and add G_PROJECT_ID
-* make run (boom)
+## Getting Started
+
+* Click `Use this template` button above
+* Edit `go.mod`, change module name to your new repo name
+* Create  firebase project
+    * Upgrade project to pay as you go
+    * Create a Firestore
+    * Go to settings -> Service accounts, click "Generate new private key". This will download a JSON file. 
+    * Run `base64 -w 0 account.json` to get encoded version of the file (for secrets)
+    * Make `.env` file with `G_KEY` (output of above command) and `G_PROJECT_ID`
+        * Or add those vars into your codespace secrets
+* `make run` (boom)

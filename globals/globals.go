@@ -5,7 +5,15 @@ import (
 	"github.com/dgraph-io/ristretto"
 )
 
+func init() {
+	App = &MyApp{}
+}
+
 var (
-	Cache *ristretto.Cache
-	Fs    *firestore.Client
+	App *MyApp
 )
+
+type MyApp struct {
+	Cache *ristretto.Cache
+	Db    *firestore.Client
+}

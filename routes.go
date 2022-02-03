@@ -54,7 +54,7 @@ func postMsg(w http.ResponseWriter, r *http.Request) error {
 		return gotils.C(ctx).Errorf("bad input: %w", err)
 	}
 
-	v, err := firetils.Save(ctx, globals.Fs, "msgs", mi)
+	v, err := firetils.Save(ctx, globals.App.Db, "msgs", mi)
 	if err != nil {
 		return gotils.C(ctx).Errorf("fs error: %w", err)
 	}
@@ -70,7 +70,7 @@ func getMsgs(w http.ResponseWriter, r *http.Request) error {
 
 	mi := &Msg{}
 
-	vs, err := firetils.GetAllByQuery2(ctx, globals.Fs.Collection("msgs").OrderBy("createdAt", firestore.Desc), mi)
+	vs, err := firetils.GetAllByQuery2(ctx, globals.App.Db.Collection("msgs").OrderBy("createdAt", firestore.Desc), mi)
 	if err != nil {
 		return gotils.C(ctx).Errorf("fs error: %w", err)
 	}
