@@ -8,7 +8,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/treeder/firetils"
 	"github.com/treeder/gotils/v2"
-	"github.com/treeder/temp/globals"
+	"github.com/treeder/quickstart/globals"
 )
 
 func setupRoutes(ctx context.Context, r chi.Router) {
