@@ -48,16 +48,18 @@ func main() {
 		gotils.Logf(ctx, "error", "couldn't init firebase newapp: %v\n", err)
 		return
 	}
+	globals.App.FireApp = firebaseApp
 	firestore, err := firebaseApp.Firestore(ctx)
 	if err != nil {
 		gotils.Logf(ctx, "error", "couldn't init firestore: %v\n", err)
+		return
 	}
 	globals.App.Db = firestore
-	// if you want auth:
-	// fireauth, err := firebaseApp.Auth(ctx)
-	// if err != nil {
-	// 	gotils.L(ctx).Sugar().Fatalf("error getting firebase auth client: %v\n", err)
-	// }
+	globals.App.Auth, err = firebaseApp.Auth(ctx)
+	if err != nil {
+		gotils.L(ctx).Error().Printf("error getting firebase auth client: %v\n", err)
+		return
+	}
 
 	// add something to firestore just to be sure it's working
 	tmp := firestore.Collection("tmp")

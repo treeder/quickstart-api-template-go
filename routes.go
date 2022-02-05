@@ -3,8 +3,9 @@ package main
 import (
 	"context"
 	"net/http"
+	"strings"
+	"time"
 
-	"cloud.google.com/go/firestore"
 	"github.com/go-chi/chi/v5"
 	"github.com/treeder/firetils"
 	"github.com/treeder/gotils/v2"
@@ -16,15 +17,28 @@ func setupRoutes(ctx context.Context, r chi.Router) {
 	r.Route("/v1", func(r chi.Router) {
 
 		r.Post("/msg", gotils.ErrorHandler(postMsg))
-		r.Get("/msgs", gotils.ErrorHandler(getMsgs))
+		r.With(firetils.OptionalAuth).Get("/msgs", gotils.ErrorHandler(getMsgs))
 
-		r.Route("/chains", func(r chi.Router) {
-			// r.Get("/{id}", gotils.ErrorHandler(getChain))
-		})
-		r.Route("/tokens", func(r chi.Router) {
-			// r.Get("/{id}", gotils.ErrorHandler(getToken))
-		})
+		r.Post("/session", gotils.ErrorHandler(createSession))
 	})
+}
+
+func createSession(w http.ResponseWriter, r *http.Request) error {
+	ctx := r.Context()
+
+	expiresIn := time.Hour * 24 * 14
+	// Create the session cookie. This will also verify the ID token in the process.
+	// The session cookie will have the same claims as the ID token.
+	// To only allow session cookie setting on recent sign-in, auth_time in ID token
+	// can be checked to ensure user was recently signed in before creating a session cookie.
+	idToken := r.Header.Get("Authorization")
+	splitToken := strings.Split(idToken, " ")
+	cookie, err := globals.App.Auth.SessionCookie(ctx, splitToken[1], expiresIn)
+	if err != nil {
+		gotils.NewHTTPError("Failed to create a cookie", http.StatusInternalServerError)
+	}
+	gotils.WriteObject(w, http.StatusOK, map[string]interface{}{"cookie": cookie, "expires": int(expiresIn.Seconds())})
+	return nil
 }
 
 func hi(w http.ResponseWriter, r *http.Request) error {
@@ -34,49 +48,6 @@ func hi(w http.ResponseWriter, r *http.Request) error {
 
 	// TODO: store this in our own db as we build it up
 	gotils.WriteObject(w, http.StatusOK, map[string]interface{}{"hello": "world"})
-
-	return nil
-}
-
-type Msg struct {
-	firetils.Firestored
-	firetils.TimeStamped
-	firetils.IDed
-	Msg string `firestore:"msg" json:"msg"`
-}
-
-func postMsg(w http.ResponseWriter, r *http.Request) error {
-	ctx := r.Context()
-
-	mi := &Msg{}
-	err := gotils.ParseJSONReader(r.Body, mi)
-	if err != nil {
-		return gotils.C(ctx).Errorf("bad input: %w", err)
-	}
-
-	v, err := firetils.Save(ctx, globals.App.Db, "msgs", mi)
-	if err != nil {
-		return gotils.C(ctx).Errorf("fs error: %w", err)
-	}
-
-	// TODO: store this in our own db as we build it up
-	gotils.WriteObject(w, http.StatusOK, map[string]interface{}{"message": v})
-
-	return nil
-}
-
-func getMsgs(w http.ResponseWriter, r *http.Request) error {
-	ctx := r.Context()
-
-	mi := &Msg{}
-
-	vs, err := firetils.GetAllByQuery2(ctx, globals.App.Db.Collection("msgs").OrderBy("createdAt", firestore.Desc), mi)
-	if err != nil {
-		return gotils.C(ctx).Errorf("fs error: %w", err)
-	}
-
-	// TODO: store this in our own db as we build it up
-	gotils.WriteObject(w, http.StatusOK, map[string]interface{}{"messages": vs})
 
 	return nil
 }
