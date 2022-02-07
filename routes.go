@@ -19,7 +19,7 @@ func setupRoutes(ctx context.Context, r chi.Router) {
 		r.Post("/msg", gotils.ErrorHandler(postMsg))
 		r.With(firetils.OptionalAuth).Get("/msgs", gotils.ErrorHandler(getMsgs))
 
-		r.Post("/session", gotils.ErrorHandler(createSession))
+		r.With(firetils.FireAuth).Post("/session", gotils.ErrorHandler(createSession))
 	})
 }
 
