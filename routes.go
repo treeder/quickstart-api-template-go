@@ -35,7 +35,7 @@ func createSession(w http.ResponseWriter, r *http.Request) error {
 	splitToken := strings.Split(idToken, " ")
 	cookie, err := globals.App.Auth.SessionCookie(ctx, splitToken[1], expiresIn)
 	if err != nil {
-		gotils.NewHTTPError("Failed to create a cookie", http.StatusInternalServerError)
+		return gotils.NewHTTPError("Failed to create a cookie", http.StatusInternalServerError)
 	}
 	gotils.WriteObject(w, http.StatusOK, map[string]interface{}{"cookie": cookie, "expires": int(expiresIn.Seconds())})
 	return nil
