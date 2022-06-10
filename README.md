@@ -2,7 +2,7 @@
 
 For rapid app creation.
 
-[Frontend template](https://github.com/treeder/flap-ui-template)
+[Frontend template](https://github.com/treeder/quickstart-ui-template)
 
 ## Getting Started
 

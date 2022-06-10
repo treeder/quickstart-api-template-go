@@ -16,10 +16,16 @@ func setupRoutes(ctx context.Context, r chi.Router) {
 	r.Get("/", gotils.ErrorHandler(hi))
 	r.Route("/v1", func(r chi.Router) {
 
-		r.Post("/msg", gotils.ErrorHandler(postMsg))
-		r.With(firetils.OptionalAuth).Get("/msgs", gotils.ErrorHandler(getMsgs))
-
 		r.With(firetils.FireAuth).Post("/session", gotils.ErrorHandler(createSession))
+
+		r.Route("/msgs", func(r chi.Router) {
+			r.With(firetils.FireAuth).Post("/", gotils.ErrorHandler(postMsg))
+			r.With(firetils.OptionalAuth).Get("/", gotils.ErrorHandler(getMsgs))
+			r.With(firetils.OptionalAuth).Get("/{id}", gotils.ErrorHandler(getMsg))
+			r.With(firetils.FireAuth).Post("/{id}", gotils.ErrorHandler(postMsg))
+			r.With(firetils.FireAuth).Delete("/{id}", gotils.ErrorHandler(deleteMsg))
+		})
+
 	})
 }
 
