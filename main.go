@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/dgraph-io/ristretto"
@@ -26,6 +27,7 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
+	fmt.Println("Project ID:", projectID)
 
 	// GET OTHER ENV VARS HERE
 	env := gcputils.GetEnvVar("ENV", "dev")
@@ -60,6 +62,12 @@ func main() {
 		gotils.L(ctx).Error().Printf("error getting firebase auth client: %v\n", err)
 		return
 	}
+	globals.App.Storage, err = firebaseApp.Storage(ctx)
+	if err != nil {
+		gotils.L(ctx).Error().Printf("error getting firebase storage client: %v\n", err)
+		return
+	}
+	globals.App.StorageBucket = fmt.Sprintf("%v.appspot.com", projectID)
 
 	// add something to firestore just to be sure it's working
 	tmp := firestore.Collection("tmp")
