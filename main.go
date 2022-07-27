@@ -68,6 +68,7 @@ func main() {
 		return
 	}
 	globals.App.StorageBucket = fmt.Sprintf("%v.appspot.com", projectID)
+	globals.App.StorageBucket = gcputils.GetEnvVar("BUCKET", globals.App.StorageBucket)
 
 	// add something to firestore just to be sure it's working
 	tmp := firestore.Collection("tmp")
