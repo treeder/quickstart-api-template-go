@@ -23,3 +23,10 @@ For rapid app creation.
 * Go to Cloud run -> create service
 * Mostly defaults, but choose deploy from github and choose your repo
 * No Google env vars required, but add any new ones you created
+
+## Cloud Storage CORS setup
+
+* Copy [cors.json](cors.json)
+* Open the cloud shell at console.cloud.google.com
+* Create cors.json and paste in the cors.json from here
+* Run: `gcloud storage buckets update gs://BUCKET_NAME --cors-file=cors.json`
