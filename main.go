@@ -81,7 +81,7 @@ func main() {
 	// Setup your routes
 	setupRoutes(ctx, r)
 	// Start server
-	_ = goapibase.Start(ctx, gotils.Port(8080), r)
+	_ = goapibase.StartH2C(ctx, gotils.Port(8080), r)
 }
 
 type TmpType struct {
